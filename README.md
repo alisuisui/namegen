@@ -44,17 +44,17 @@ The application is deployed on an AWS EKS cluster with managed node groups. Exte
 ## CI/CD Pipeline & Deployment Instructions
 
 ### 1. Provision AWS EKS Cluster
-\\\ash
+\\\bash
 eksctl create cluster -f eksctl/cluster.yaml
 \\\
 
 ### 2. Deploy Kubernetes Resources
-\\\ash
+\\\bash
 kubectl apply -f k8s/
 \\\
 
 ### 3. Verify Deployment
-\\\ash
+\\\bash
 kubectl get pods,svc,deployments,statefulsets
 \\\
 
