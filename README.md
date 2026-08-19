@@ -1,45 +1,63 @@
-# random-name-gen-app
-A demonstration project that has an API backend that binds to an instance of a MongoDB database and an HTML front end, all running from the same code base. The behavior of the UI is that it generates and stores a random name according to a series of button clicks.
+# Namegen DevOps Deployment on AWS EKS
 
-
-## Get up and running
-
-`Step 1:` Get the code:
-
-`git clone https://github.com/reselbob/random-name-gen-app.git`
+This repository contains the source code, Docker configuration, Kubernetes manifests, and CI/CD automation for deploying the \
+amegen\ web application on AWS Elastic Kubernetes Service (EKS) with persistent MongoDB storage.
 
 ---
 
-`Step 2:` Add an entry to `.env`:
+## ??? Architecture Overview
 
-`MONGODB_URL=<connection_string_url_to_mongodb_server>`
+The application is deployed on an AWS EKS cluster with managed node groups. External HTTP traffic routes through an AWS Elastic Load Balancer to the Node.js frontend pods, which communicate internally with a MongoDB StatefulSet backed by AWS EBS persistent storage (gp3).
 
----
-
-`Step 3:` Install the dependencies:
-
-`npm install`
+![Architecture Diagram](architecture-diagram.png)
 
 ---
 
-`Step 4:` Start the server:
+## ?? Repository Structure
 
-`node server.js`
-
-By default, the app runs on port `8080`
-
-To change the port on which the web server is listening, add the following to the `.env` file in the root of the project's working directory:
-
-`SERVER_PORT=<port_number>`
-
-WHERE
-
-`<port_number>` is the number of the port for the web server.
+\\\
+.
++-- server.js                   # Application entry point
++-- package.json                # Node.js dependencies
++-- Dockerfile                  # Container build instructions
++-- architecture-diagram.png    # Architecture & CI/CD Diagram
++-- eksctl/
+¦   L-- cluster.yaml            # EKS Cluster provision configuration
++-- k8s/
+¦   +-- app-deployment.yaml     # App Deployment
+¦   +-- app-service.yaml        # LoadBalancer Service
+¦   L-- mongodb-statefulset.yaml# MongoDB StatefulSet & Service
+L-- screenshots/
+    +-- app-cleared-db.png
+    +-- app-saved-names.png
+    L-- kubectl-cluster-status.png
+\\\
 
 ---
 
-`Step 5:` Access the front-end web page:
+## ?? CI/CD Pipeline & Deployment Instructions
 
-`http://localhost:8080/`
+### 1. Provision AWS EKS Cluster
+\\\ash
+eksctl create cluster -f eksctl/cluster.yaml
+\\\
 
-![1 40-05](https://user-images.githubusercontent.com/1110569/192336149-68a1e69d-9689-477d-9047-8e3899b933c3.png)
+### 2. Deploy Kubernetes Resources
+\\\ash
+kubectl apply -f k8s/
+\\\
+
+### 3. Verify Deployment
+\\\ash
+kubectl get pods,svc,deployments,statefulsets
+\\\
+
+---
+
+## ?? Screenshots
+
+### Active Kubernetes Cluster Resources
+![Kubectl Status](screenshots/kubectl-cluster-status.png)
+
+### Running Application & MongoDB Persistence
+![App Saved Names](screenshots/app-saved-names.png)
